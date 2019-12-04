@@ -1,8 +1,6 @@
 version: '2'
 services:
-  pihole:
-    container_name: pihole
-    image: jdhawk/pihole
+  pihole-doh:
     build: .
     cap_add:
       - NET_ADMIN
