@@ -1,0 +1,35 @@
+version: '2'
+services:
+  pihole:
+    container_name: pihole
+    image: jdhawk/pihole
+    build: .
+    cap_add:
+      - NET_ADMIN
+    networks:
+      - pihole_external
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+    environment:
+      VIRTUAL_HOST: pihole.example.com
+      WEBPASSWORD: "password"
+      DNS1: "127.0.0.1#5053"
+      DNS2: "1.0.0.1"
+    restart: unless-stopped
+networks:
+  pihole_external:
+    driver: macvlan  #This is helpful if you have services already bound on those ports, as is common in Synology and other NAS devices.
+    driver_opts:
+      parent: enp0s25 #Change to your network interface here.
+    ipam:
+      config:
+        - subnet: 192.168.7.0/24
+          gateway: 192.168.7.12
+          ip_range: 192.168.7.44/30
